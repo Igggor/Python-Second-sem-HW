@@ -3,3 +3,5 @@ distributions.png
 knn_animation.gif
 utils/__pycache__/
 data_analysis/__pycache__/
+.venv/
+__pycache__/

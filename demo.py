@@ -20,8 +20,8 @@ def main():
     )
 
     # 3. Поиск выбросов
-    outliers = get_boxplot_outliers(points[:, 0])
-    print(f"Found {len(outliers)} outliers in X axis")
+    outliers = get_boxplot_outliers(points)
+    print(f"Found {len(outliers)} outliers in points")
 
     # 4. Разделение данных
     X_train, y_train, X_test, y_test = train_test_split(

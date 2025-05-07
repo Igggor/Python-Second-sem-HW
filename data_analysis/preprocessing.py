@@ -4,28 +4,72 @@ import numpy as np
 
 def get_boxplot_outliers(
     data: np.ndarray,
-    key: Callable[[Any], Any] = None
-    ) -> np.ndarray:
-    """Поиск выбросов с помощью метода boxplot (IQR)."""
-    if key is not None:
-        # Сортируем индексы по key, затем применяем их к data
-        sorted_indices = np.argsort([key(x) for x in data])
-        data_sorted = data[sorted_indices]
+    key: Callable[[Any], Any] = None,
+) -> np.ndarray:
+    """
+    Поиск выбросов в n-мерном массиве с помощью метода boxplot (IQR).
+    
+    Параметры:
+    ----------
+    data : np.ndarray
+        Входные данные (может быть n-мерным)
+    key : Callable, optional
+        Функция для сортировки (если None - обычная сортировка)
+    axis : int или None, optional
+        Ось для анализа (None - обрабатывает все оси отдельно и объединяет результаты)
+        
+    Возвращает:
+    -----------
+    np.ndarray
+        Уникальные индексы выбросов
+    """
+    if data.ndim == 1:
+        # 1D случай - работаем как раньше
+        if key is not None:
+            sorted_indices = np.argsort([key(x) for x in data])
+            data_sorted = data[sorted_indices]
+        else:
+            data_sorted = np.sort(data)
+        
+        n = len(data_sorted)
+        q1 = data_sorted[int(n * 0.25)]
+        q3 = data_sorted[int(n * 0.75)]
+        epsilon = (q3 - q1) * 1.5
+        
+        lower_bound = q1 - epsilon
+        upper_bound = q3 + epsilon
+        
+        return np.where((data < lower_bound) | (data > upper_bound))[0]
+    
     else:
-        data_sorted = np.sort(data)
-
-
-    n = len(data_sorted)
-
-    q1 = data_sorted[int(n * 0.25)]
-    q3 = data_sorted[int(n * 0.75)]
-    epsilon = (q3 - q1) * 1.5
-
-    lower_bound = q1 - epsilon
-    upper_bound = q3 + epsilon
-
-    outliers = np.where((data < lower_bound) | (data > upper_bound))[0]
-    return outliers
+        # Многомерный случай
+        all_outliers = []
+        
+        axes_to_check = range(data.shape[1])
+        
+        for ax in axes_to_check:
+            axis_data = data[:, ax]
+            
+            # Применяем алгоритм для 1D-случая
+            if key is not None:
+                sorted_indices = np.argsort([key(x) for x in axis_data])
+                data_sorted = axis_data[sorted_indices]
+            else:
+                data_sorted = np.sort(axis_data)
+            
+            n = len(data_sorted)
+            q1 = data_sorted[int(n * 0.25)]
+            q3 = data_sorted[int(n * 0.75)]
+            epsilon = (q3 - q1) * 1.5
+            
+            lower_bound = q1 - epsilon
+            upper_bound = q3 + epsilon
+            
+            outliers = np.where((axis_data < lower_bound) | (axis_data > upper_bound))[0]
+            all_outliers.extend(outliers.tolist())
+        
+        # Возвращаем уникальные индексы
+        return np.unique(all_outliers)
 
 
 def train_test_split(
@@ -80,8 +124,8 @@ def train_test_split(
         test_labels.append(targets[cls_indices[n_train:]])
 
     return (
-        np.vstack(train_features),
-        np.concatenate(train_labels),
+        np.vstack(train_features), # Объединение массивов вертикально (по первой оси)
+        np.concatenate(train_labels), # Объединение массивов вдоль существующей оси
         np.vstack(test_features),
         np.concatenate(test_labels),
     )

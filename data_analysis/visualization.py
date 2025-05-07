@@ -42,13 +42,36 @@ def visualize_distribution(
             data = points[:, 0] if axis == AxisNames.X else points[:, 1]
 
             if d_type == DiagramTypes.Violin:
-                ax.violinplot(data, showmeans=True, showmedians=True, vert=False)
+                violin_parts = ax.violinplot(
+                    data,
+                    showmeans=True,
+                    showmedians=True,
+                    vert=False,
+                )
+                for body in violin_parts["bodies"]:
+                    body.set_facecolor("cornflowerblue")
+                    body.set_edgecolor("blue")
+
             elif d_type == DiagramTypes.Hist:
-                ax.hist(data, bins=20, alpha=0.7)
+                ax.hist(
+                    data,
+                    bins=20,
+                    alpha=0.7,
+                    color="cornflowerblue",
+                )
+
             elif d_type == DiagramTypes.Boxplot:
-                ax.boxplot(data, vert=False)
+                ax.boxplot(
+                    data,
+                    vert=False,
+                    patch_artist=True,
+                    boxprops=dict(facecolor="lightsteelblue"),
+                    medianprops=dict(color="k")
+                )
 
             ax.set_title(f"{d_type} plot for {axis} axis")
+            ax.grid(True)
+
 
     plt.tight_layout()
     if path_to_save:

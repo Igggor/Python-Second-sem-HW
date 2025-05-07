@@ -1,16 +1,20 @@
-from typing import Tuple
+from typing import Tuple, Callable, Any
 import numpy as np
 
 
 def get_boxplot_outliers(
     data: np.ndarray,
-    axis: int | None = None,  # Для многомерных данных (None = сжатие в 1D)
-) -> np.ndarray:
+    key: Callable[[Any], Any] = None
+    ) -> np.ndarray:
     """Поиск выбросов с помощью метода boxplot (IQR)."""
-    if axis is not None:
-        data = data[:, axis]  # Выбираем конкретную ось (0 или 1)
+    if key is not None:
+        # Сортируем индексы по key, затем применяем их к data
+        sorted_indices = np.argsort([key(x) for x in data])
+        data_sorted = data[sorted_indices]
+    else:
+        data_sorted = np.sort(data)
 
-    data_sorted = np.sort(data)
+
     n = len(data_sorted)
 
     q1 = data_sorted[int(n * 0.25)]
@@ -21,7 +25,6 @@ def get_boxplot_outliers(
     upper_bound = q3 + epsilon
 
     outliers = np.where((data < lower_bound) | (data > upper_bound))[0]
-    print(outliers)
     return outliers
 
 

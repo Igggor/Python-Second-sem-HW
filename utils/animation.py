@@ -80,7 +80,7 @@ class AnimationKNN:
 
         anim = FuncAnimation(
             self.fig, update, frames=len(X_test),
-            interval=1000, repeat=False
+            interval=500, repeat=False
         )
 
         if path_to_save:

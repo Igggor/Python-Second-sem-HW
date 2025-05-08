@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 from data_analysis.preprocessing import get_boxplot_outliers, train_test_split
-from models.knn import euclidean_dist
+from models.knn import euclidean_dist, KNearestNeighbors, WeightedKNearestNeighbors
 
 
 # Фикстуры для тестовых данных
@@ -106,3 +106,62 @@ def test_euclidean_dist():
         euclidean_dist(np.array([[1,1,1]]), np.array([[4,5,6]])), 
         [np.sqrt(9+16+25)]
     )
+
+@pytest.fixture
+def knn_dataset():
+    """Простые данные с двумя классами"""
+    X_train = np.array([
+        [0.0, 0.0],
+        [1.0, 1.0],
+        [2.0, 2.0],
+        [10.0, 10.0],
+        [11.0, 11.0],
+    ])
+    y_train = np.array([0, 0, 0, 1, 1])
+    X_test = np.array([[1.5, 1.5], [10.5, 10.5]])
+    return X_train, y_train, X_test
+
+
+class TestKNearestNeighbors:
+    def test_knn_basic_prediction(self, knn_dataset):
+        X_train, y_train, X_test = knn_dataset
+        knn = KNearestNeighbors(n_neighbors=3)
+        knn.fit(X_train, y_train)
+        preds = knn.predict(X_test)
+        assert len(preds) == 2
+        assert preds[0] == 0  # ближе к классу 0
+        assert preds[1] == 1  # ближе к классу 1
+
+    def test_knn_single_point(self):
+        knn = KNearestNeighbors(n_neighbors=1)
+        knn.fit(np.array([[0, 0]]), np.array([42]))
+        pred = knn.predict(np.array([[1, 1]]))
+        assert pred[0] == 42
+
+
+class TestWeightedKNearestNeighbors:
+    def test_weighted_knn_basic_prediction(self, knn_dataset):
+        X_train, y_train, X_test = knn_dataset
+        knnw = WeightedKNearestNeighbors(n_neighbors=3)
+        knnw.fit(X_train, y_train)
+        preds = knnw.predict(X_test)
+        assert len(preds) == 2
+        assert preds[0] == 0
+        assert preds[1] == 1
+
+    def test_weighted_knn_equal_distance(self):
+        """Если веса равны, выбирается по сумме"""
+        X_train = np.array([[0, 0], [2, 0]])
+        y_train = np.array([0, 1])
+        X_test = np.array([[1, 0]])
+        knnw = WeightedKNearestNeighbors(n_neighbors=2)
+        knnw.fit(X_train, y_train)
+        pred = knnw.predict(X_test)
+        assert pred[0] in (0, 1)  # оба класса на равном расстоянии
+
+    def test_kernel_output(self):
+        """Проверка правильности ядра Епанечникова"""
+        u = np.array([-1.5, -1, 0, 0.5, 1, 1.5])
+        expected = np.array([0, 0, 0.75, 0.5625, 0, 0])
+        result = WeightedKNearestNeighbors.epanechnikov_kernel(u)
+        assert np.allclose(result, expected)

@@ -16,8 +16,9 @@ def euclidean_dist(x1: np.ndarray, x2: np.ndarray) -> np.ndarray:
         x1 = x1[np.newaxis, :]
     if x2.ndim == 1:
         x2 = x2[np.newaxis, :]
-    
-    return np.sqrt(np.sum((x1 - x2) ** 2, axis=1))
+
+    # axis=1 для того, чтобы суммировать внутри каждой строки
+    return np.sqrt(np.sum((x1 - x2) ** 2, axis=1)) 
 
 
 class KNearestNeighbors:

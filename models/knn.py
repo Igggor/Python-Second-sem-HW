@@ -4,11 +4,11 @@ import numpy as np
 
 def euclidean_dist(x1: np.ndarray, x2: np.ndarray) -> np.ndarray:
     """Вычисляет евклидово расстояние между точками.
-    
+
     Параметры:
         x1: Массив формы (n_samples, n_features) ИЛИ (n_features,)
         x2: Массив формы (n_samples, n_features) ИЛИ (n_features,)
-    
+
     Возвращает:
         Массив расстояний формы (n_samples,)
     """
@@ -18,7 +18,7 @@ def euclidean_dist(x1: np.ndarray, x2: np.ndarray) -> np.ndarray:
         x2 = x2[np.newaxis, :]
 
     # axis=1 для того, чтобы суммировать внутри каждой строки
-    return np.sqrt(np.sum((x1 - x2) ** 2, axis=1)) 
+    return np.sqrt(np.sum((x1 - x2) ** 2, axis=1))
 
 
 class KNearestNeighbors:
@@ -73,7 +73,7 @@ class WeightedKNearestNeighbors:
 
             unique = np.unique(nearest_labels)
             class_scores = {cls: 0.0 for cls in unique}
-            
+
             for label, weight in zip(nearest_labels, weights):
                 class_scores[label] += weight
             predictions.append(max(class_scores, key=class_scores.get))

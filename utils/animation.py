@@ -71,7 +71,7 @@ class AnimationKNN:
                 f"К соседей: {knn.n_neighbors}, Радиус: {max_distance:.2f}",
                 color=title_color, fontsize=12
             )
-            
+
             self.ax.legend(loc='upper right')
             self.ax.grid(True, alpha=0.3)
             self.ax.set_xlabel("Признак 1")

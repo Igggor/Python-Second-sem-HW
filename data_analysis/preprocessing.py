@@ -8,7 +8,7 @@ def get_boxplot_outliers(
 ) -> np.ndarray:
     """
     Поиск выбросов в n-мерном массиве с помощью метода boxplot (IQR).
-    
+
     Параметры:
     ----------
     data : np.ndarray
@@ -17,7 +17,7 @@ def get_boxplot_outliers(
         Функция для сортировки (если None - обычная сортировка)
     axis : int или None, optional
         Ось для анализа (None - обрабатывает все оси отдельно и объединяет результаты)
-        
+
     Возвращает:
     -----------
     np.ndarray
@@ -30,44 +30,44 @@ def get_boxplot_outliers(
             data_sorted = data[sorted_indices]
         else:
             data_sorted = np.sort(data)
-        
+
         n = len(data_sorted)
         q1 = data_sorted[int(n * 0.25)]
         q3 = data_sorted[int(n * 0.75)]
         epsilon = (q3 - q1) * 1.5
-        
+
         lower_bound = q1 - epsilon
         upper_bound = q3 + epsilon
-        
+
         return np.where((data < lower_bound) | (data > upper_bound))[0]
-    
+
     else:
         # Многомерный случай
         all_outliers = []
-        
+
         axes_to_check = range(data.shape[1])
-        
+
         for ax in axes_to_check:
             axis_data = data[:, ax]
-            
+
             # Применяю алгоритм для 1D-случая
             if key is not None:
                 sorted_indices = np.argsort([key(x) for x in axis_data])
                 data_sorted = axis_data[sorted_indices]
             else:
                 data_sorted = np.sort(axis_data)
-            
+
             n = len(data_sorted)
             q1 = data_sorted[int(n * 0.25)]
             q3 = data_sorted[int(n * 0.75)]
             epsilon = (q3 - q1) * 1.5
-            
+
             lower_bound = q1 - epsilon
             upper_bound = q3 + epsilon
-            
+
             outliers = np.where((axis_data < lower_bound) | (axis_data > upper_bound))[0]
             all_outliers.extend(outliers.tolist())
-        
+
         # Возвращаем только уникальные индексы
         return np.unique(all_outliers)
 
@@ -124,8 +124,8 @@ def train_test_split(
         test_labels.append(targets[cls_indices[n_train:]])
 
     return (
-        np.vstack(train_features), # Объединение массивов вертикально (по первой оси)
-        np.concatenate(train_labels), # Объединение массивов вдоль существующей оси (горизонтально)
+        np.vstack(train_features),  # Объединение массивов вертикально (по первой оси)
+        np.concatenate(train_labels),  # Объединение массивов вдоль существующей оси (горизонтально)
         np.vstack(test_features),
         np.concatenate(test_labels),
     )

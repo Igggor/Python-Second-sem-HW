@@ -72,7 +72,6 @@ def visualize_distribution(
             ax.set_title(f"{d_type} plot for {axis} axis")
             ax.grid(True)
 
-
     plt.tight_layout()
     if path_to_save:
         plt.savefig(path_to_save)

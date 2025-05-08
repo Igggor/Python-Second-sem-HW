@@ -1,56 +1,8 @@
-# # import pyteset
-# import numpy as np
-# from data_analysis.preprocessing import get_boxplot_outliers, train_test_split
-
-
-# def check_get_boxplot_outliers():
-#     # Тестовые данные с явными выбросами
-#     test_data = np.array([
-#         [1, 1.2],    # индекс 0
-#         [2, 1.0],    # индекс 1
-#         [3, 0.8],    # индекс 2
-#         [4, -10.0],  # индекс 3 (выброс по Y)
-#         [50, -0.5],  # индекс 4 (выброс по X)
-#         [5, 100.0]   # индекс 5 (выброс по Y)
-#     ])
-
-#     outliers = get_boxplot_outliers(test_data)
-#     assert len(outliers) == 3
-#     print("Индексы выбросов:", outliers)  # Должно вернуть array([3, 4, 5])
-
-
-# def check_train_test_split():
-#     # Создадю тестовые данные с определенным сидом, чтобы можно было проверить.
-#     np.random.seed(42)
-#     features = np.random.rand(100, 2)  # 100 точек, 2 признака
-#     targets = np.array([0]*70 + [1]*30)  # 70 класса 0 и 30 класса 1
-
-#     train_feats, train_lbls, test_feats, test_lbls = train_test_split(
-#         features, targets, train_ratio=0.7, shuffle=True, random_seed=42
-#     )
-
-#     # Результаты
-#     print(f"Общее количество: {len(features)}")
-#     print(f"Train размер: {len(train_feats)}")
-#     print(f"Test размер: {len(test_feats)}")
-#     print("\nРаспределение классов в исходных данных:")
-#     print(f"Класс 0: {sum(targets == 0)}")
-#     print(f"Класс 1: {sum(targets == 1)}")
-#     print("\nРаспределение классов в train:")
-#     print(f"Класс 0: {sum(train_lbls == 0)}")
-#     print(f"Класс 1: {sum(train_lbls == 1)}")
-#     print("\nРаспределение классов в test:")
-#     print(f"Класс 0: {sum(test_lbls == 0)}")
-#     print(f"Класс 1: {sum(test_lbls == 1)}")
-
-# if __name__ == "__main__":
-#     check_train_test_split()
-
-
-
 import numpy as np
 import pytest
 from data_analysis.preprocessing import get_boxplot_outliers, train_test_split
+from models.knn import euclidean_dist
+
 
 # Фикстуры для тестовых данных
 @pytest.fixture
@@ -141,3 +93,16 @@ def test_invalid_inputs():
         
     with pytest.raises(ValueError):
         train_test_split(np.array([[1, 2]]), np.array([1]), train_ratio=1.5)
+
+
+def test_euclidean_dist():
+    # Проверка 2D
+    assert np.allclose(
+        euclidean_dist(np.array([[0,0]]), np.array([[3,4]])), 
+        [5.0]
+    )
+    # Проверка 3D
+    assert np.allclose(
+        euclidean_dist(np.array([[1,1,1]]), np.array([[4,5,6]])), 
+        [np.sqrt(9+16+25)]
+    )

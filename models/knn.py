@@ -71,13 +71,10 @@ class WeightedKNearestNeighbors:
             weights = self.epanechnikov_kernel(distances[nearest_indices] / h)
             nearest_labels = self.y_train[nearest_indices]
 
-            unique_classes = np.unique(self.y_train)
-            class_scores = []
-
-            for cls in unique_classes:
-                mask = (nearest_labels == cls)
-                score = np.sum(weights[mask])
-                class_scores.append(score)
-
-            predictions.append(unique_classes[np.argmax(class_scores)])
+            unique = np.unique(nearest_labels)
+            class_scores = {cls: 0.0 for cls in unique}
+            
+            for label, weight in zip(nearest_labels, weights):
+                class_scores[label] += weight
+            predictions.append(max(class_scores, key=class_scores.get))
         return np.array(predictions)

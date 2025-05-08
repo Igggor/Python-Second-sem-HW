@@ -66,8 +66,8 @@ class WeightedKNearestNeighbors:
         for x in X_test:
             distances = self.calc_distances(self.X_train, x)
             nearest_indices = np.argsort(distances)[:self.n_neighbors]
-            h = distances[nearest_indices[-1]]  # ширина окна
-
+            h = max(distances[nearest_indices[-1]], 10e-9)  # ширина окна
+            # А еще добавил защиту от деления на нуль
             weights = self.epanechnikov_kernel(distances[nearest_indices] / h)
             nearest_labels = self.y_train[nearest_indices]
 

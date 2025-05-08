@@ -116,7 +116,7 @@ def train_test_split(
         n_train = int(len(cls_indices) * train_ratio)
 
         if shuffle:
-            rng.shuffle(cls_indices)  # Используем современный генератор
+            rng.shuffle(cls_indices)  # Используем генератор
 
         train_features.append(features[cls_indices[:n_train]])
         train_labels.append(targets[cls_indices[:n_train]])
@@ -125,7 +125,7 @@ def train_test_split(
 
     return (
         np.vstack(train_features), # Объединение массивов вертикально (по первой оси)
-        np.concatenate(train_labels), # Объединение массивов вдоль существующей оси
+        np.concatenate(train_labels), # Объединение массивов вдоль существующей оси (горизонтально)
         np.vstack(test_features),
         np.concatenate(test_labels),
     )

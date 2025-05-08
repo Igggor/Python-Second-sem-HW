@@ -3,7 +3,20 @@ import numpy as np
 
 
 def euclidean_dist(x1: np.ndarray, x2: np.ndarray) -> np.ndarray:
-    """Евклидово расстояние между точками"""
+    """Вычисляет евклидово расстояние между точками.
+    
+    Параметры:
+        x1: Массив формы (n_samples, n_features) ИЛИ (n_features,)
+        x2: Массив формы (n_samples, n_features) ИЛИ (n_features,)
+    
+    Возвращает:
+        Массив расстояний формы (n_samples,)
+    """
+    if x1.ndim == 1:
+        x1 = x1[np.newaxis, :]
+    if x2.ndim == 1:
+        x2 = x2[np.newaxis, :]
+    
     return np.sqrt(np.sum((x1 - x2) ** 2, axis=1))
 
 

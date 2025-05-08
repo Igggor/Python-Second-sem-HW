@@ -24,7 +24,7 @@ def get_boxplot_outliers(
         Уникальные индексы выбросов
     """
     if data.ndim == 1:
-        # 1D случай - работаем как раньше
+        # 1D-случай реализовал как было раньше
         if key is not None:
             sorted_indices = np.argsort([key(x) for x in data])
             data_sorted = data[sorted_indices]
@@ -50,7 +50,7 @@ def get_boxplot_outliers(
         for ax in axes_to_check:
             axis_data = data[:, ax]
             
-            # Применяем алгоритм для 1D-случая
+            # Применяю алгоритм для 1D-случая
             if key is not None:
                 sorted_indices = np.argsort([key(x) for x in axis_data])
                 data_sorted = axis_data[sorted_indices]
@@ -68,7 +68,7 @@ def get_boxplot_outliers(
             outliers = np.where((axis_data < lower_bound) | (axis_data > upper_bound))[0]
             all_outliers.extend(outliers.tolist())
         
-        # Возвращаем уникальные индексы
+        # Возвращаем только уникальные индексы
         return np.unique(all_outliers)
 
 
@@ -100,7 +100,6 @@ def train_test_split(
     Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
         (train_features, train_labels, test_features, test_labels)
     """
-    # Проверка входных данных
     if len(features) != len(targets):
         raise ValueError("features и targets должны иметь одинаковую длину")
     if not 0 <= train_ratio <= 1:
@@ -116,7 +115,8 @@ def train_test_split(
         n_train = int(len(cls_indices) * train_ratio)
 
         if shuffle:
-            rng.shuffle(cls_indices)  # Используем генератор
+            # Использую генератор, который я создал выше
+            rng.shuffle(cls_indices)
 
         train_features.append(features[cls_indices[:n_train]])
         train_labels.append(targets[cls_indices[:n_train]])

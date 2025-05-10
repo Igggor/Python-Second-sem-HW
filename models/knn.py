@@ -38,6 +38,10 @@ class KNearestNeighbors:
         for x in X_test:
             distances = self.calc_distances(self.X_train, x)
             nearest_indices = np.argsort(distances)[:self.n_neighbors]
+            """
+            Нюансы:
+                np.argsort(distances) возвращает индексы точек в порядке возрастания расстояния.
+            """
             nearest_labels = self.y_train[nearest_indices]
             unique, counts = np.unique(nearest_labels, return_counts=True)
             predictions.append(unique[np.argmax(counts)])

@@ -129,8 +129,6 @@ def train_test_split(
         test_features.append(features[cls_indices[n_train:]])
         test_labels.append(targets[cls_indices[n_train:]])
     """
-    np.vstack vs np.concatenate:
-
     vstack используется для features, так как это 2D-массив (объединяет по вертикали).
 
     concatenate используется для labels, так как это 1D-массив.

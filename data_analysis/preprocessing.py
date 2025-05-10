@@ -99,6 +99,11 @@ def train_test_split(
     -----------
     Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
         (train_features, train_labels, test_features, test_labels)
+
+    Нюансы:
+        При train_ratio=1.0 тестовая выборка будет пустой
+        При shuffle=False сохраняется исходный порядок данных
+        При random_seed=None результаты будут разными при каждом запуске
     """
     if len(features) != len(targets):
         raise ValueError("features и targets должны иметь одинаковую длину")
@@ -116,6 +121,7 @@ def train_test_split(
 
         if shuffle:
             # Использую генератор, который я создал выше
+            # перемешиваю индексы, чтобы сохранить связь между координатами и классом
             rng.shuffle(cls_indices)
 
         train_features.append(features[cls_indices[:n_train]])

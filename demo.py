@@ -33,7 +33,7 @@ def main():
         "Обычный KNN": KNearestNeighbors(n_neighbors=5),
         "Взвешенный KNN": WeightedKNearestNeighbors(n_neighbors=10)
     }
-    
+
     for name, model in models.items():
         model.fit(X_train, y_train)
         pred = model.predict(X_test)
@@ -43,8 +43,8 @@ def main():
     # Визуализация работы алгоритма
     animator = AnimationKNN()
     animator.create_animation(
-        models["Обычный KNN"], 
-        X_test[:20], 
+        models["Обычный KNN"],
+        X_test[:20],
         y_test[:20],
         path_to_save="fruit_classification.gif"
     )

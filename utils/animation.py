@@ -29,18 +29,15 @@ class AnimationKNN:
             x = X_test[frame]
             is_correct = predictions[frame] == y_test[frame]
 
-            # Отображаю обучающие данные
             self.ax.scatter(
                 knn.X_train[:, 0], knn.X_train[:, 1],
                 c=knn.y_train, alpha=0.3, label="Обучающие данные"
             )
 
-            # Вычисляю ближайших соседей
             distances = knn.calc_distances(knn.X_train, x)
             nearest_indices = np.argsort(distances)[:knn.n_neighbors]
             max_distance = distances[nearest_indices[-1]]  # Радиус для круга
 
-            # Рисую круг, охватывающий соседей
             circle = plt.Circle(
                 (x[0], x[1]), max_distance,
                 color='green', fill=False, linestyle='--', alpha=0.5,

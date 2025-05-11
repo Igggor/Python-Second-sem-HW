@@ -68,7 +68,7 @@ def get_boxplot_outliers(
             outliers = np.where((axis_data < lower_bound) | (axis_data > upper_bound))[0]
             all_outliers.extend(outliers.tolist())
 
-        # Возвращаем только уникальные индексы
+        # При помощи unique возвращаю только уникальные индексы
         return np.unique(all_outliers)
 
 
@@ -81,24 +81,6 @@ def train_test_split(
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """
     Разделяет данные на train и test с сохранением баланса классов.
-
-    Параметры:
-    ----------
-    features : np.ndarray
-        Массив признаков формы (n_samples, n_features).
-    targets : np.ndarray
-        Массив меток формы (n_samples,).
-    train_ratio : float, optional
-        Доля обучающей выборки (по умолчанию 0.8).
-    shuffle : bool, optional
-        Если True, данные перемешиваются (по умолчанию True).
-    random_seed : int, optional
-        Seed для генератора случайных чисел (по умолчанию None).
-
-    Возвращает:
-    -----------
-    Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
-        (train_features, train_labels, test_features, test_labels)
 
     Нюансы:
         При train_ratio=1.0 тестовая выборка будет пустой

@@ -3,15 +3,6 @@ import numpy as np
 
 
 def euclidean_dist(x1: np.ndarray, x2: np.ndarray) -> np.ndarray:
-    """Вычисляет евклидово расстояние между точками.
-
-    Параметры:
-        x1: Массив формы (n_samples, n_features) ИЛИ (n_features,)
-        x2: Массив формы (n_samples, n_features) ИЛИ (n_features,)
-
-    Возвращает:
-        Массив расстояний формы (n_samples,)
-    """
     if x1.ndim == 1:
         x1 = x1[np.newaxis, :]
     if x2.ndim == 1:
@@ -58,7 +49,6 @@ class WeightedKNearestNeighbors:
 
     @staticmethod
     def epanechnikov_kernel(u: np.ndarray) -> np.ndarray:
-        """Ядро Епанечникова"""
         return np.where(np.abs(u) <= 1, 0.75 * (1 - u**2), 0)
 
     def fit(self, X_train: np.ndarray, y_train: np.ndarray):
